@@ -9,7 +9,7 @@ build:
 	go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN) .
 
 build-release:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN)-$(GOOS)-$(GOARCH)$(EXT) .
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN) .
 
 clean:
-	rm -f $(BIN)*
+	rm -f $(BIN)
