@@ -1,6 +1,6 @@
 run like
 
-`docker run --network host -v $(pwd)/populate.json:/populate.json epos/epos-plugin-populator populate http://example:33000/api/v1 /populate.json`
+`docker run --rm --network host -v ./populate.json:/populate.json epos/epos-plugin-populator populate http://localhost:33000/api/v1 /populate.json`
 
 with the populate.json file that is something like this:
 
