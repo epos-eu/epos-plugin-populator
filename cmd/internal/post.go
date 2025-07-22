@@ -24,6 +24,7 @@ func postPlugins(baseURL url.URL, plugins []Plugin, versionFlag string, operatio
 	pluginErrors := 0
 	relationPosted := 0
 	relationErrors := 0
+	relationsTotal := 0
 	postedPlugins := []*converter.Plugin{}
 
 	display.Step("Starting plugin population process...")
@@ -34,6 +35,8 @@ func postPlugins(baseURL url.URL, plugins []Plugin, versionFlag string, operatio
 	}
 
 	for i, p := range plugins {
+		relationsTotal += len(p.Relations)
+
 		display.Step("Processing plugin %d/%d: '%s'", i+1, len(plugins), p.Name)
 
 		pluginToPost := converter.Plugin{
@@ -69,6 +72,7 @@ func postPlugins(baseURL url.URL, plugins []Plugin, versionFlag string, operatio
 			for j, r := range p.Relations {
 				if _, ok := operationUIDMap[r.RelationID]; !ok {
 					display.Warn("  └─ Relation with operation UID '%s' has no mapping in the current environment", r.RelationID)
+					relationErrors++
 					continue
 				}
 
@@ -96,7 +100,7 @@ func postPlugins(baseURL url.URL, plugins []Plugin, versionFlag string, operatio
 
 	display.Info("Population complete - Summary:")
 	display.Info("Plugins: %d successful, %d failed (out of %d total)", pluginsPosted, pluginErrors, len(plugins))
-	display.Info("Relations: %d successful, %d failed", relationPosted, relationErrors)
+	display.Info("Relations: %d successful, %d failed (out of %d total)", relationPosted, relationErrors, relationsTotal)
 
 	if pluginsPosted == 0 {
 		display.Error("No plugins were successfully posted")
@@ -105,10 +109,10 @@ func postPlugins(baseURL url.URL, plugins []Plugin, versionFlag string, operatio
 
 	if pluginErrors > 0 || relationErrors > 0 {
 		display.Warn("Process completed with some errors - check logs above for details")
-	} else {
-		display.Done("All plugins and relations posted successfully!")
+		return postedPlugins, fmt.Errorf("process completed with some errors - check logs for details")
 	}
 
+	display.Done("All plugins and relations posted successfully!")
 	return postedPlugins, nil
 }
 

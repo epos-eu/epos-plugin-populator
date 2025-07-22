@@ -41,7 +41,8 @@ var populateCmd = &cobra.Command{
 
 		err = internal.Populate(*baseURL, plugins, versionFlag)
 		if err != nil {
-			panic(err)
+			fmt.Printf("population finished with errors: %v\n", err)
+			os.Exit(1)
 		}
 	},
 }

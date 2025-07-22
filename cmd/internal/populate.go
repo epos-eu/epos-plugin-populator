@@ -39,13 +39,10 @@ func Populate(baseURL url.URL, plugins []Plugin, versionFlag string) error {
 	display.Done("Finished fetching details. Mapped %d Operation UIDs.", len(operationUIDMap))
 	display.Step("Populating the converter with the plugins")
 
-	postedPlugins, err := postPlugins(baseURL, plugins, versionFlag, operationUIDMap)
+	_, err = postPlugins(baseURL, plugins, versionFlag, operationUIDMap)
 	if err != nil {
 		return fmt.Errorf("error posting plugins: %w", err)
 	}
-
-	display.Done("Finished posting plugins. Posted %d plugins successfully.", len(postedPlugins))
-	display.Step("Populating the converter with the plugin relations")
 
 	return nil
 }
