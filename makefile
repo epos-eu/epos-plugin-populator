@@ -1,7 +1,5 @@
 BIN=epos-plugin-populator
 VERSION?=makefile
-GOOS?=$(shell go env GOOS)
-GOARCH?=$(shell go env GOARCH)
 
 .PHONY: build build-release clean
 
@@ -9,7 +7,7 @@ build:
 	go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN) .
 
 build-release:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN) .
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X epos-plugin-populator/cmd.Version=$(VERSION)" -o $(BIN) .
 
 clean:
 	rm -f $(BIN)
